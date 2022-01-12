@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import EmployeeService from '../services/EmployeeService';
 
 class CreateEmployeeComponent extends Component {
 
@@ -12,7 +13,7 @@ class CreateEmployeeComponent extends Component {
             emailId:''
 
         }
-        //Binding event handlers to constructor
+        //Binding event handlers to constructor - storing form data in the properties onChange
         this.changeFirstNameHandler = this.changeFirstNameHandler.bind(this);
         this.changeLastNameHandler = this.changeLastNameHandler.bind(this);
         this.changeEmailHandler = this.changeEmailHandler.bind(this);
@@ -32,13 +33,19 @@ class CreateEmployeeComponent extends Component {
         this.setState({emailId: event.target.value});
     }
 
-    //Saving User Details
+    //Saving User Details - Getting data from properties onclicking save btn
     saveEmployee(e){
         e.preventDefault();
         let employee = {firstName: this.state.firstName, lastName: this.state.lastName, emailId: this.state.emailId}
         console.log('employee =>' + JSON.stringify(employee));
 
-    }
+        //Returning users list on successful response from Rest API  
+        EmployeeService.createEmployee(employee).then(res =>{
+            this.props.history.push('employees');
+
+        });
+
+    } 
     //On Cancel
     cancel(){
         this.props.history.push('/employees');
