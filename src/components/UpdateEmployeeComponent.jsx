@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import EmployeeService from '../services/EmployeeService';
 
-class CreateEmployeeComponent extends Component {
-
+class UpdateEmployeeComponent extends Component {
     constructor(props){
         super(props)
 
         this.state = {
 
+            id: this.props.match.params.id,
             firstName: '',
             lastName:'',
             emailId:''
@@ -17,14 +17,11 @@ class CreateEmployeeComponent extends Component {
         this.changeFirstNameHandler = this.changeFirstNameHandler.bind(this);
         this.changeLastNameHandler = this.changeLastNameHandler.bind(this);
         this.changeEmailHandler = this.changeEmailHandler.bind(this);
-        this.saveEmployee = this.saveEmployee.bind(this);
+        this.updateEmployee = this.updateEmployee.bind(this);
 
 
     }
-    //Defining event handlers - using setState to add value to property
-    //storing form data in the properties onChange
-    // event.target.value retrieves / access value of whatever input it was called on.
-   
+    //Defining event handlers - using setFirstName to add value to property
     changeFirstNameHandler = (event) => {
         this.setState({firstName: event.target.value});
     }
@@ -37,21 +34,36 @@ class CreateEmployeeComponent extends Component {
     }
 
     //Saving User Details - Getting data from properties onclicking save btn
-    saveEmployee(e){
+    updateEmployee(e){
         e.preventDefault();
-        let employee = {firstName: this.state.firstName, lastName: this.state.lastName, emailId: this.state.emailId}
+        let employee = {firstName: this.state.firstName, lastName: this.state.lastName, emailId: this.state.emailId};
         console.log('employee =>' + JSON.stringify(employee));
 
-        //Returning users list on successful response from Rest API  
-        EmployeeService.createEmployee(employee).then(res =>{
-            this.props.history.push('employees');
-
+        EmployeeService.updateEmployee(employee, this.state.id).then( res => {
+            this.props.history.push('/employees');
         });
+
 
     } 
     //On Cancel
     cancel(){
         this.props.history.push('/employees');
+    }
+
+    //Update - Retrieving response from getEmployeeById and 
+    //setting response data to state using setState
+    componentDidMount(){
+        EmployeeService.getEmployeeById(this.state.id).then( (res) =>{
+        let employee = res.data;
+
+            this.setState({
+                firstName: employee.firstName,
+                lastName: employee.lastName,
+                emailId: employee.emailId
+
+            });
+
+        });
     }
 
 
@@ -62,7 +74,7 @@ class CreateEmployeeComponent extends Component {
                 <div className='container'>
                     <div className='row'>
                         <div className='card col-md-6 offset-md-3 offset-md-3'>
-                            <h3 className='text-center'> Add Employee </h3>
+                            <h3 className='text-center'> Update Employee </h3>
                             <div className='card-body'>
                                 <form>
                                     <div className='form-group'>
@@ -84,7 +96,7 @@ class CreateEmployeeComponent extends Component {
                                     </div>
                                     <br/>
 
-                                    <button className='btn btn-success' onClick={this.saveEmployee}>Save</button>
+                                    <button className='btn btn-success' onClick={this.updateEmployee}>Save</button>
                                     <button className="btn btn-danger" onClick={this.cancel.bind(this)} style={{marginLeft: "10px"}}>Cancel</button>
                                 </form>       
                             </div>
@@ -96,4 +108,4 @@ class CreateEmployeeComponent extends Component {
     }
 }
 
-export default CreateEmployeeComponent;
+export default UpdateEmployeeComponent;

@@ -10,11 +10,12 @@ class ListEmployeesComponent extends Component {
 
         this.state = {
 
-            employees: []
+            employees: [ ]
 
         }
-        //Binding addEmployee function to Constructor
+        //Binding methods / eventhandlers function to Constructor
         this.addEmployee = this.addEmployee.bind(this);
+        this.editEmployee = this.editEmployee.bind(this);
 
     }
     componentDidMount(){
@@ -22,9 +23,15 @@ class ListEmployeesComponent extends Component {
             this.setState({employees: res.data});
         });
     }
-
+    //Add -  Navigaing to add user page
      addEmployee() {
         this.props.history.push('/add-employee');
+    }
+
+    //edit -  Navigaing to edit page
+    editEmployee(id){
+        this.props.history.push(`/update-employee/${id}`);
+
     }
 
     
@@ -57,6 +64,10 @@ class ListEmployeesComponent extends Component {
                                     <td> {employee.firstName} </td>
                                     <td> {employee.lastName} </td>
                                     <td> {employee.emailId} </td>
+                                    <td>
+                                        <button onClick={ () => this.editEmployee(employee.id)} className="btn btn-info">Update </button>
+
+                                    </td>
 
                                 </tr>
                             
