@@ -23,18 +23,18 @@ class ListEmployeesComponent extends Component {
             this.setState({employees: res.data});
         });
     }
-    //Add -  Navigaing to add user page
+    //Add -  Navigating to add user page
      addEmployee() {
-        this.props.history.push('/add-employee');
+        this.props.history.push('/add-employee/-1');
     }
 
     //edit -  Navigaing to edit page
     editEmployee(id){
-        this.props.history.push(`/update-employee/${id}`);
+        this.props.history.push(`/add-employee/${id}`);
 
     }
+   
 
-    
     render() {
         return (
             <div> 

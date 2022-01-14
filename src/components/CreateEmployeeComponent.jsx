@@ -7,7 +7,8 @@ class CreateEmployeeComponent extends Component {
         super(props)
 
         this.state = {
-
+            //Adding id to state
+            id: this.props.match.params.id,
             firstName: '',
             lastName:'',
             emailId:''
@@ -35,18 +36,43 @@ class CreateEmployeeComponent extends Component {
     changeEmailHandler = (event) =>{
         this.setState({emailId: event.target.value});
     }
+    //Having user object to populate form for editing.
+    //Using ComponentDidMount func to make rest API call to get object by ID
+    componentDidMount(){
+        //Adding condition to return if it's for adding user
+        if(this.state.id == -1){
+            return
+        }else{
+            EmployeeService.getEmployeeById(this.state.id).then ( (res)=> {
+                let employee = res.data;
+    
+                this.setState ({
+                    firstName: employee.firstName,
+                    lastName: employee.lastName,
+                    emailId: employee.emailId
+                });
+    
+            } );
+        }
+        
+    }
 
     //Saving User Details - Getting data from properties onclicking save btn
     saveEmployee(e){
         e.preventDefault();
         let employee = {firstName: this.state.firstName, lastName: this.state.lastName, emailId: this.state.emailId}
         console.log('employee =>' + JSON.stringify(employee));
-
+        //Adding Condition to return createEmployee or updateEmployee dynamically based on url.
+        if(this.state.id == -1){
         //Returning users list on successful response from Rest API  
         EmployeeService.createEmployee(employee).then(res =>{
             this.props.history.push('employees');
 
-        });
+        });}else{
+            EmployeeService.updateEmployee(employee, this.state.id).then( res => {
+                this.props.history.push('/employees');
+            });
+        }
 
     } 
     //On Cancel
@@ -54,7 +80,15 @@ class CreateEmployeeComponent extends Component {
         this.props.history.push('/employees');
     }
 
-
+     //Adding Condition to change page title dynamically
+     getTitle(){
+        if(this.state.id === '_add'){
+            return <h3 className="text-center">Add Employee</h3>
+        }else{
+            return <h3 className="text-center">Update Employee</h3>
+        }
+    }
+    
     render() {
         return (
             <div>
@@ -62,7 +96,10 @@ class CreateEmployeeComponent extends Component {
                 <div className='container'>
                     <div className='row'>
                         <div className='card col-md-6 offset-md-3 offset-md-3'>
-                            <h3 className='text-center'> Add Employee </h3>
+                            {/* changing page title dynamically */}
+                            {
+                            this.getTitle()
+                            }
                             <div className='card-body'>
                                 <form>
                                     <div className='form-group'>
