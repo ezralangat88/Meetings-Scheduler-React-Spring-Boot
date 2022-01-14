@@ -20,7 +20,7 @@ class EmployeeService{
 
     //Sending updated employee form data Rest API which store to db
     updateEmployee(employee, employeeId){
-        return axios.put(EMPLOYEE_API_BASE_URL , '/' , employeeId, employee);
+        return axios.put(EMPLOYEE_API_BASE_URL + '/' + employeeId, employee);
         
     }
 
