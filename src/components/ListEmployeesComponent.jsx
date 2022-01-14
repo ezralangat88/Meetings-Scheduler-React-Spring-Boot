@@ -25,7 +25,7 @@ class ListEmployeesComponent extends Component {
     }
     //Add -  Navigating to add user page
      addEmployee() {
-        this.props.history.push('/add-employee/-1');
+        this.props.history.push('/add-employee/_add');
     }
 
     //edit -  Navigaing to edit page

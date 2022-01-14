@@ -40,7 +40,7 @@ class CreateEmployeeComponent extends Component {
     //Using ComponentDidMount func to make rest API call to get object by ID
     componentDidMount(){
         //Adding condition to return if it's for adding user
-        if(this.state.id == -1){
+        if(this.state.id === '_add'){
             return
         }else{
             EmployeeService.getEmployeeById(this.state.id).then ( (res)=> {
@@ -63,10 +63,10 @@ class CreateEmployeeComponent extends Component {
         let employee = {firstName: this.state.firstName, lastName: this.state.lastName, emailId: this.state.emailId}
         console.log('employee =>' + JSON.stringify(employee));
         //Adding Condition to return createEmployee or updateEmployee dynamically based on url.
-        if(this.state.id == -1){
+        if(this.state.id === '_add'){
         //Returning users list on successful response from Rest API  
         EmployeeService.createEmployee(employee).then(res =>{
-            this.props.history.push('employees');
+            this.props.history.push('/employees');
 
         });}else{
             EmployeeService.updateEmployee(employee, this.state.id).then( res => {
@@ -96,10 +96,7 @@ class CreateEmployeeComponent extends Component {
                 <div className='container'>
                     <div className='row'>
                         <div className='card col-md-6 offset-md-3 offset-md-3'>
-                            {/* changing page title dynamically */}
-                            {
-                            this.getTitle()
-                            }
+                            {this.getTitle()}
                             <div className='card-body'>
                                 <form>
                                     <div className='form-group'>
